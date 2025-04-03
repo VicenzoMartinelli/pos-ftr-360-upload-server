@@ -29,6 +29,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Wait for PostgreSQL to be ready
+        run: sleep 10
+      
+      - name: Run initialization scripts
+        run: |
+          # Install PostgreSQL client
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          
+          PGPASSWORD=docker psql -h localhost -U docker -d postgres -f docker/init.sql
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
